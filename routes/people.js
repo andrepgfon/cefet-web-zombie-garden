@@ -66,6 +66,17 @@ router.get('/new/', (req, res) => {
 //   2. Redirecionar para a rota de listagem de pessoas
 //      - Em caso de sucesso do INSERT, colocar uma mensagem feliz
 //      - Em caso de erro do INSERT, colocar mensagem vermelhinha
+router.post('/', (req, res) => {
+    personName = req.body.name;
+    db.query(`INSERT INTO person (name) VALUES ('${personName}')`, (err,result) =>{
+    if(err){
+      req.flash('error', 'Erro desconhecido. Descrição: ' + err)
+    }else{
+      req.flash('success', 'A pessoa foi inteiramente inserida.');
+    }
+    res.redirect('/');
+  });
+});
 
 
 /* DELETE uma pessoa */
@@ -75,7 +86,18 @@ router.get('/new/', (req, res) => {
 //   2. Redirecionar para a rota de listagem de pessoas
 //      - Em caso de sucesso do INSERT, colocar uma mensagem feliz
 //      - Em caso de erro do INSERT, colocar mensagem vermelhinha
-
+router.delete('/:id/', (req, res) => {
+    personId = req.params.id;
+    db.query(`DELETE FROM person where id = ('${personId}')`, (err,result) =>{
+    if(err){
+      req.flash('error', 'Erro desconhecido. Descrição: ' + err)
+    }else{
+      req.flash('success', 'A pessoa foi inteiramente (não só o nome) deletada.');
+    }
+    console.log(result.affectedRows);
+    res.redirect('/');
+  });
+});
 
 
 module.exports = router;
